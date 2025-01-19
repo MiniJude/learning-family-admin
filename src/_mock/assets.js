@@ -551,26 +551,12 @@ export const ROLE_LIST = [ADMIN_ROLE, TEST_ROLE];
  * User data mock
  */
 export const DEFAULT_USER = {
-	id: "b34719e1-ce46-457e-9575-99505ecee828",
-	username: "admin",
-	email: faker.internet.email(),
-	avatar: faker.image.avatarGitHub(),
-	createdAt: faker.date.anytime(),
-	updatedAt: faker.date.recent(),
-	password: "demo1234",
-	role: ADMIN_ROLE,
-	permissions: ADMIN_ROLE.permission,
+	email: "1546985690@qq.com",
+	password: "123456",
 };
 export const TEST_USER = {
-	id: "efaa20ea-4dc5-47ee-a200-8a899be29494",
-	username: "test",
-	password: "demo1234",
-	email: faker.internet.email(),
-	avatar: faker.image.avatarGitHub(),
-	createdAt: faker.date.anytime(),
-	updatedAt: faker.date.recent(),
-	role: TEST_ROLE,
-	permissions: TEST_ROLE.permission,
+	email: "755177815@qq.com",
+	password: "123456",
 };
 export const USER_LIST = [DEFAULT_USER, TEST_USER];
 

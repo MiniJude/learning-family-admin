@@ -37,14 +37,6 @@ function RegisterForm() {
 				onFinish={onFinish}
 			>
 				<Form.Item
-					name="username"
-					rules={[
-						{ required: true, message: t("sys.login.accountPlaceholder") },
-					]}
-				>
-					<Input placeholder={t("sys.login.userName")} />
-				</Form.Item>
-				<Form.Item
 					name="email"
 					rules={[
 						{ required: true, message: t("sys.login.emaildPlaceholder") },
