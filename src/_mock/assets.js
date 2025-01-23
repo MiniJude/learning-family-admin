@@ -551,10 +551,12 @@ export const ROLE_LIST = [ADMIN_ROLE, TEST_ROLE];
  * User data mock
  */
 export const DEFAULT_USER = {
+	id: "5",
 	email: "1546985690@qq.com",
 	password: "123456",
 };
 export const TEST_USER = {
+	id: "2",
 	email: "755177815@qq.com",
 	password: "123456",
 };
