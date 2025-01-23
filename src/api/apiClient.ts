@@ -18,7 +18,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
 	(config) => {
 		// 在请求被发送之前做些什么
-		config.headers.Authorization = "Bearer Token";
+		const { accessToken } = userStore.getState().userToken;
+		config.headers.Authorization = accessToken;
 		return config;
 	},
 	(error) => {
