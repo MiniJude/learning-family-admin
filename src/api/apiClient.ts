@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(
 	(config) => {
 		// 在请求被发送之前做些什么
 		const { accessToken } = userStore.getState().userToken;
-		config.headers.Authorization = accessToken;
+		config.headers.Authorization = `Bearer ${accessToken}`;
 		return config;
 	},
 	(error) => {
