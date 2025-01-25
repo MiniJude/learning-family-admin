@@ -1,7 +1,7 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "editor.tabSize": 2,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
@@ -9,7 +9,9 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
-  "tailwindCSS.experimental.classRegex": [["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
   "npm.packageManager": "pnpm",
   "i18n-ally.localesPaths": ["src/locales/lang"],
   "i18n-ally.enabledParsers": ["json"],
