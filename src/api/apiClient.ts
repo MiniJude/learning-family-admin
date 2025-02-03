@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
 
 		const { code, data, message } = res.data;
 		// 业务请求成功
-		const hasSuccess = data && Reflect.has(res.data, "code") && code === ResultEnum.SUCCESS;
+		const hasSuccess = Reflect.has(res.data, "code") && code === ResultEnum.SUCCESS;
 		if (hasSuccess) {
 			return data;
 		}

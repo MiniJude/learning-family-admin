@@ -1,10 +1,13 @@
-import { AutoComplete, Form, Input, InputNumber, Modal, Radio, TreeSelect } from "antd";
+import { useMutation } from "@tanstack/react-query";
+import { AutoComplete, Button, Flex, Form, Input, InputNumber, Modal, Radio, Space, TreeSelect, message } from "antd";
 import { useCallback, useEffect, useState } from "react";
 
+import permissionService from "@/api/services/permissionService";
 import { useUserPermission } from "@/store/userStore";
 
+import { useTranslation } from "react-i18next";
 import type { Permission } from "#/entity";
-import { BasicStatus, PermissionType } from "#/enum";
+import { PermissionType } from "#/enum";
 
 // Constants
 const ENTRY_PATH = "/src/pages";
@@ -21,14 +24,41 @@ export type PermissionModalProps = {
 	formValue: Permission;
 	title: string;
 	show: boolean;
-	onOk: VoidFunction;
-	onCancel: VoidFunction;
+	onCancel: (refresh?: boolean) => void;
 };
 
-export default function PermissionModal({ title, show, formValue, onOk, onCancel }: PermissionModalProps) {
+export default function PermissionModal({ title, show, formValue, onCancel }: PermissionModalProps) {
 	const [form] = Form.useForm();
 	const permissions = useUserPermission();
 	const [compOptions, setCompOptions] = useState(PAGE_SELECT_OPTIONS);
+
+	const { t } = useTranslation();
+
+	const createPermissionMutation = useMutation<Permission, unknown, Permission>({
+		mutationFn: (data) => {
+			return permissionService.createPermission(data);
+		},
+		onSuccess() {
+			message.success("操作成功");
+			onCancel(true);
+		},
+	});
+
+	const updatePermissionMutation = useMutation<Permission, unknown, Permission>({
+		mutationFn: (data) => permissionService.updatePermission(data),
+		onSuccess() {
+			message.success("操作成功");
+			onCancel(true);
+		},
+	});
+
+	const handleFinish = (values: any) => {
+		if (title === t("common.createText")) {
+			createPermissionMutation.mutate(values);
+		} else if (title === t("common.editText")) {
+			updatePermissionMutation.mutate({ ...values, id: formValue.id });
+		}
+	};
 
 	const getParentNameById = useCallback(
 		(parentId: string, data: Permission[] | undefined = permissions) => {
@@ -58,6 +88,10 @@ export default function PermissionModal({ title, show, formValue, onOk, onCancel
 		);
 	};
 
+	const onReset = () => {
+		form.resetFields();
+	};
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		form.setFieldsValue({ ...formValue });
@@ -68,24 +102,36 @@ export default function PermissionModal({ title, show, formValue, onOk, onCancel
 	}, [formValue, form, getParentNameById]);
 
 	return (
-		<Modal forceRender title={title} open={show} onOk={onOk} onCancel={onCancel}>
-			<Form initialValues={formValue} form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} layout="horizontal">
-				<Form.Item<Permission> label="Type" name="type" required>
+		<Modal forceRender title={title} open={show} onCancel={() => onCancel(true)} footer={null}>
+			<Form
+				initialValues={formValue}
+				form={form}
+				onFinish={handleFinish}
+				labelCol={{ span: 6 }}
+				wrapperCol={{ span: 18 }}
+				layout="horizontal"
+			>
+				<Form.Item<Permission> label="Type" name="type">
 					<Radio.Group optionType="button" buttonStyle="solid">
 						<Radio value={PermissionType.CATALOGUE}>CATALOGUE</Radio>
 						<Radio value={PermissionType.MENU}>MENU</Radio>
 					</Radio.Group>
 				</Form.Item>
 
-				<Form.Item<Permission> label="Name" name="name" required>
+				<Form.Item<Permission> label="Name" name="name" rules={[{ required: true }]}>
 					<Input />
 				</Form.Item>
 
-				<Form.Item<Permission> label="Label" name="label" required tooltip="internationalization config">
+				<Form.Item<Permission>
+					label="Label"
+					name="label"
+					rules={[{ required: true }]}
+					tooltip="internationalization config"
+				>
 					<Input />
 				</Form.Item>
 
-				<Form.Item<Permission> label="Parent" name="parentId" required>
+				<Form.Item<Permission> label="Parent" name="parentId">
 					<TreeSelect
 						fieldNames={{
 							label: "name",
@@ -100,7 +146,7 @@ export default function PermissionModal({ title, show, formValue, onOk, onCancel
 					/>
 				</Form.Item>
 
-				<Form.Item<Permission> label="Route" name="route" required>
+				<Form.Item<Permission> label="Route" name="route" rules={[{ required: true }]}>
 					<Input />
 				</Form.Item>
 
@@ -141,12 +187,16 @@ export default function PermissionModal({ title, show, formValue, onOk, onCancel
 					<InputNumber style={{ width: "100%" }} />
 				</Form.Item>
 
-				<Form.Item<Permission> label="Status" name="status" required>
-					<Radio.Group optionType="button" buttonStyle="solid">
-						<Radio value={BasicStatus.ENABLE}> Enable </Radio>
-						<Radio value={BasicStatus.DISABLE}> Disable </Radio>
-					</Radio.Group>
-				</Form.Item>
+				<Flex justify="center">
+					<Space>
+						<Button htmlType="button" onClick={onReset}>
+							重置
+						</Button>
+						<Button type="primary" htmlType="submit">
+							提交
+						</Button>
+					</Space>
+				</Flex>
 			</Form>
 		</Modal>
 	);

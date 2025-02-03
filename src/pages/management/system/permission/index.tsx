@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { Button, Card, Popconfirm, Tag } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, Card, Popconfirm, Tag, message } from "antd";
 import Table, { type ColumnsType } from "antd/es/table";
 import { isNil } from "ramda";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import { IconButton, Iconify, SvgIcon } from "@/components/icon";
 import PermissionModal, { type PermissionModalProps } from "./permission-modal";
 
 import type { Permission } from "#/entity";
-import { BasicStatus, PermissionType } from "#/enum";
+import { PermissionType } from "#/enum";
 
 const defaultPermissionValue: Permission = {
 	id: "",
@@ -22,26 +22,35 @@ const defaultPermissionValue: Permission = {
 	component: "",
 	icon: "",
 	hide: false,
-	status: BasicStatus.ENABLE,
 	type: PermissionType.CATALOGUE,
 };
 export default function PermissionPage() {
-	const { data: permissions } = useQuery({
+	const { data: permissions, refetch } = useQuery({
 		queryKey: ["permissions"],
 		queryFn: () => permissionService.getPermissionList(),
+	});
+
+	const deletePermissionMutation = useMutation({
+		mutationFn: (id: string) => {
+			return permissionService.deletePermission(id);
+		},
+		onSuccess() {
+			message.success("操作成功");
+			refetch();
+		},
 	});
 
 	const { t } = useTranslation();
 
 	const [permissionModalProps, setPermissionModalProps] = useState<PermissionModalProps>({
 		formValue: { ...defaultPermissionValue },
-		title: "New",
+		title: "",
 		show: false,
-		onOk: () => {
+		onCancel: (refresh = false) => {
 			setPermissionModalProps((prev) => ({ ...prev, show: false }));
-		},
-		onCancel: () => {
-			setPermissionModalProps((prev) => ({ ...prev, show: false }));
+			if (refresh) {
+				refetch();
+			}
 		},
 	});
 	const columns: ColumnsType<Permission> = [
@@ -73,17 +82,6 @@ export default function PermissionPage() {
 			title: "Component",
 			dataIndex: "component",
 		},
-		{
-			title: "Status",
-			dataIndex: "status",
-			align: "center",
-			width: 120,
-			render: (status) => (
-				<Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
-					{status === BasicStatus.DISABLE ? "Disable" : "Enable"}
-				</Tag>
-			),
-		},
 		{ title: "Order", dataIndex: "order", width: 60 },
 		{
 			title: "Action",
@@ -100,7 +98,13 @@ export default function PermissionPage() {
 					<IconButton onClick={() => onEdit(record)}>
 						<Iconify icon="solar:pen-bold-duotone" size={18} />
 					</IconButton>
-					<Popconfirm title="Delete the Permission" okText="Yes" cancelText="No" placement="left">
+					<Popconfirm
+						title="Delete the Permission"
+						onConfirm={() => deletePermissionMutation.mutate(record.id)}
+						okText="Yes"
+						cancelText="No"
+						placement="left"
+					>
 						<IconButton>
 							<Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
 						</IconButton>
@@ -115,7 +119,7 @@ export default function PermissionPage() {
 			...prev,
 			show: true,
 			...defaultPermissionValue,
-			title: "New",
+			title: t("common.createText"),
 			formValue: { ...defaultPermissionValue, parentId: parentId ?? "" },
 		}));
 	};
@@ -124,7 +128,7 @@ export default function PermissionPage() {
 		setPermissionModalProps((prev) => ({
 			...prev,
 			show: true,
-			title: "Edit",
+			title: t("common.editText"),
 			formValue,
 		}));
 	};

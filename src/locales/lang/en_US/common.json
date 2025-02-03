@@ -5,6 +5,8 @@
 		"cancelText": "Cancel",
 		"loadingText": "Loading...",
 		"saveText": "Save",
+		"createText": "New",
+		"editText": "Edit",
 		"delText": "Delete",
 		"resetText": "Reset",
 		"searchText": "Search",
