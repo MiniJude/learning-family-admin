@@ -46,9 +46,9 @@ export interface Permission {
 export interface Role {
 	id: string;
 	name: string;
-	label: string;
-	status: BasicStatus;
+	label?: string;
+	status?: BasicStatus;
 	order?: number;
 	desc?: string;
-	permission?: Permission[];
+	menuIds?: number[];
 }

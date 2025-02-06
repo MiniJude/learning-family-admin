@@ -1,67 +1,107 @@
-import { Form, Input, InputNumber, Modal, Radio, Tree } from "antd";
-import { useEffect } from "react";
+import { Button, Flex, Form, Input, Modal, Space, Tree, message } from "antd";
+import { useEffect, useState } from "react";
 
-import { PERMISSION_LIST } from "@/_mock/assets";
-import { flattenTrees } from "@/utils/tree";
-
-import type { Permission, Role } from "#/entity";
-import { BasicStatus } from "#/enum";
+import roleService from "@/api/services/roleService";
+import { useUserPermission } from "@/store/userStore";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import type { Role } from "#/entity";
 
 export type RoleModalProps = {
 	formValue: Role;
 	title: string;
 	show: boolean;
-	onOk: VoidFunction;
-	onCancel: VoidFunction;
+	onCancel: (refresh?: boolean) => void;
 };
-const PERMISSIONS: Permission[] = PERMISSION_LIST as Permission[];
-export function RoleModal({ title, show, formValue, onOk, onCancel }: RoleModalProps) {
+export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) {
 	const [form] = Form.useForm();
 
-	const flattenedPermissions = flattenTrees(formValue.permission);
-	const checkedKeys = flattenedPermissions.map((item) => item.id);
+	const { t } = useTranslation();
+
+	const createRoleMutation = useMutation<Role, unknown, Role>({
+		mutationFn: (data) => {
+			return roleService.createRole(data);
+		},
+		onSuccess() {
+			message.success("操作成功");
+			onCancel(true);
+		},
+	});
+
+	const updateRoleMutation = useMutation<Role, unknown, Role>({
+		mutationFn: (data) => {
+			Reflect.set(data, "menuIds", checkedKeys);
+			return roleService.updateRole(data);
+		},
+		onSuccess() {
+			message.success("操作成功");
+			onCancel(true);
+		},
+	});
+
+	const handleFinish = (values: any) => {
+		if (title === t("common.createText")) {
+			createRoleMutation.mutate(values);
+		} else if (title === t("common.editText")) {
+			updateRoleMutation.mutate({ ...values, id: formValue.id });
+		}
+	};
+
+	const permissions = useUserPermission();
+
+	const [checkedKeys, setCheckedKeys] = useState<number[]>(formValue.menuIds ?? []);
+	const handleCheck = (checkedKeysValue: any) => {
+		setCheckedKeys(checkedKeysValue);
+	};
+
+	const onReset = () => {
+		form.resetFields();
+		setCheckedKeys(formValue.menuIds ?? []);
+	};
+
 	useEffect(() => {
 		form.setFieldsValue({ ...formValue });
+		setCheckedKeys(formValue.menuIds ?? []);
 	}, [formValue, form]);
 
 	return (
-		<Modal title={title} open={show} onOk={onOk} onCancel={onCancel}>
-			<Form initialValues={formValue} form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} layout="horizontal">
+		<Modal forceRender title={title} open={show} onCancel={() => onCancel(true)} footer={null}>
+			<Form
+				initialValues={formValue}
+				form={form}
+				onFinish={handleFinish}
+				labelCol={{ span: 4 }}
+				wrapperCol={{ span: 18 }}
+				layout="horizontal"
+			>
 				<Form.Item<Role> label="Name" name="name" required>
 					<Input />
 				</Form.Item>
 
-				<Form.Item<Role> label="Label" name="label" required>
-					<Input />
-				</Form.Item>
-
-				<Form.Item<Role> label="Order" name="order">
-					<InputNumber style={{ width: "100%" }} />
-				</Form.Item>
-
-				<Form.Item<Role> label="Status" name="status" required>
-					<Radio.Group optionType="button" buttonStyle="solid">
-						<Radio value={BasicStatus.ENABLE}> Enable </Radio>
-						<Radio value={BasicStatus.DISABLE}> Disable </Radio>
-					</Radio.Group>
-				</Form.Item>
-
-				<Form.Item<Role> label="Desc" name="desc">
-					<Input.TextArea />
-				</Form.Item>
-
-				<Form.Item<Role> label="Permission" name="permission">
+				<Form.Item<Role> label="Permission" name="menuIds">
 					<Tree
 						checkable
 						checkedKeys={checkedKeys}
-						treeData={PERMISSIONS}
+						treeData={permissions}
 						fieldNames={{
 							key: "id",
 							children: "children",
 							title: "name",
 						}}
+						onCheck={handleCheck}
 					/>
 				</Form.Item>
+
+				<Flex justify="center">
+					<Space>
+						<Button htmlType="button" onClick={onReset}>
+							重置
+						</Button>
+						<Button type="primary" htmlType="submit">
+							提交
+						</Button>
+					</Space>
+				</Flex>
 			</Form>
 		</Modal>
 	);
