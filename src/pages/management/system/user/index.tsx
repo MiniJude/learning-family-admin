@@ -1,18 +1,36 @@
-import { Button, Card, Popconfirm, Tag } from "antd";
-import Table, { type ColumnsType } from "antd/es/table";
-
-import { USER_LIST } from "@/_mock/assets";
+import userService from "@/api/services/userService";
 import { IconButton, Iconify } from "@/components/icon";
 import { usePathname, useRouter } from "@/router/hooks";
-
-import type { Role, UserInfo } from "#/entity";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Card, Popconfirm, Tag, message } from "antd";
+import Table, { type ColumnsType } from "antd/es/table";
+import type { UserInfo } from "#/entity";
 import { BasicStatus } from "#/enum";
-
-const USERS: UserInfo[] = USER_LIST as UserInfo[];
 
 export default function RolePage() {
 	const { push } = useRouter();
 	const pathname = usePathname();
+	const queryClient = useQueryClient();
+
+	const { data: users, isLoading } = useQuery({
+		queryKey: ["users"],
+		queryFn: () => userService.getUserList(),
+	});
+
+	const deleteUserMutation = useMutation({
+		mutationFn: (userId: string) => userService.removeUser(userId),
+		onSuccess: () => {
+			message.success("用户删除成功");
+
+			// Invalidate the query to refetch the user list from the server
+			// This ensures the UI is updated with the latest data after deletion
+			// Unlike refetch, which manually triggers a refetch, invalidateQueries marks the query as stale and refetches it automatically
+			queryClient.invalidateQueries({ queryKey: ["users"] });
+		},
+		onError: () => {
+			message.error("删除用户失败");
+		},
+	});
 
 	const columns: ColumnsType<UserInfo> = [
 		{
@@ -24,19 +42,12 @@ export default function RolePage() {
 					<div className="flex">
 						<img alt="" src={record.avatar} className="h-10 w-10 rounded-full" />
 						<div className="ml-2 flex flex-col">
-							<span className="text-sm">{record.username}</span>
+							<span className="text-sm">{record.nickName}</span>
 							<span className="text-xs text-text-secondary">{record.email}</span>
 						</div>
 					</div>
 				);
 			},
-		},
-		{
-			title: "Role",
-			dataIndex: "role",
-			align: "center",
-			width: 120,
-			render: (role: Role) => <Tag color="cyan">{role.name}</Tag>,
 		},
 		{
 			title: "Status",
@@ -66,7 +77,13 @@ export default function RolePage() {
 					<IconButton onClick={() => {}}>
 						<Iconify icon="solar:pen-bold-duotone" size={18} />
 					</IconButton>
-					<Popconfirm title="Delete the User" okText="Yes" cancelText="No" placement="left">
+					<Popconfirm
+						title="Delete the User"
+						okText="Yes"
+						cancelText="No"
+						placement="left"
+						onConfirm={() => deleteUserMutation.mutate(record.id)}
+					>
 						<IconButton>
 							<Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
 						</IconButton>
@@ -91,7 +108,8 @@ export default function RolePage() {
 				scroll={{ x: "max-content" }}
 				pagination={false}
 				columns={columns}
-				dataSource={USERS}
+				dataSource={users}
+				loading={isLoading}
 			/>
 		</Card>
 	);

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from "react-icons/ai";
 
 import { DEFAULT_USER, TEST_USER } from "@/_mock/assets";
-import type { SignInReq } from "@/api/services/userService";
+import type { SignInReq } from "@/api/services/authService";
 import { useSignIn } from "@/store/userStore";
 
 import { LoginStateEnum, useLoginStateContext } from "./providers/LoginStateProvider";

@@ -1,6 +1,6 @@
 import apiClient from "../apiClient";
 
-import type { UserInfo, UserToken } from "#/entity";
+import type { UserInfo } from "#/entity";
 
 export interface SignInReq {
 	email: string;
@@ -10,27 +10,23 @@ export interface SignInReq {
 export interface SignUpReq extends SignInReq {
 	email: string;
 }
-export type SignInRes = UserToken & { user: UserInfo };
 
 export enum UserApi {
-	SignIn = "/auth/signin",
-	SignUp = "/auth/signup",
-	Logout = "/auth/logout",
-	Refresh = "/auth/refresh",
+	List = "/user/list",
+	Remove = "/user/delete",
+	Logout = "/user/logout",
+	Refresh = "/user/refresh",
 	User = "/user",
 }
 
-const signin = (data: SignInReq) =>
-	apiClient.post<SignInRes>({ url: UserApi.SignIn, data });
-const signup = (data: SignUpReq) =>
-	apiClient.post<SignInRes>({ url: UserApi.SignUp, data });
+const getUserList = () => apiClient.get<UserInfo[]>({ url: UserApi.List });
+const removeUser = (id: string) => apiClient.delete({ url: `${UserApi.Remove}/${id}` });
 const logout = () => apiClient.get({ url: UserApi.Logout });
-const findById = (id: string) =>
-	apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` });
+const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` });
 
 export default {
-	signin,
-	signup,
+	getUserList,
+	removeUser,
 	findById,
 	logout,
 };

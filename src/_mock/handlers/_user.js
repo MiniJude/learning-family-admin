@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse, delay } from "msw";
 
-import { UserApi } from "@/api/services/userService";
+import { UserApi } from "@/api/services/authService";
 
 import { USER_LIST } from "../assets";
 

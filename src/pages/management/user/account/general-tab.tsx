@@ -16,9 +16,9 @@ type FieldType = {
 	about: string;
 };
 export default function GeneralTab() {
-	const { avatar, username, email } = useUserInfo();
+	const { avatar, nickName, email } = useUserInfo();
 	const initFormValues = {
-		name: username,
+		name: nickName,
 		email,
 		phone: faker.phone.number(),
 		address: faker.location.county(),
@@ -47,12 +47,7 @@ export default function GeneralTab() {
 			</Col>
 			<Col span={24} lg={16}>
 				<Card>
-					<Form
-						layout="vertical"
-						initialValues={initFormValues}
-						labelCol={{ span: 8 }}
-						className="w-full"
-					>
+					<Form layout="vertical" initialValues={initFormValues} labelCol={{ span: 8 }} className="w-full">
 						<Row gutter={16}>
 							<Col span={12}>
 								<Form.Item<FieldType> label="Username" name="name">

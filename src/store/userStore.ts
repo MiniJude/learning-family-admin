@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import userService, { type SignInReq } from "@/api/services/userService";
+import userService, { type SignInReq } from "@/api/services/authService";
 
 import { toast } from "sonner";
 import type { UserInfo, UserToken } from "#/entity";

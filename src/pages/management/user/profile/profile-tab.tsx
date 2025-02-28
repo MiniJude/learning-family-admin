@@ -20,12 +20,12 @@ interface DataType {
 }
 
 export default function ProfileTab() {
-	const { username } = useUserInfo();
+	const { nickName } = useUserInfo();
 	const AboutItems = [
 		{
 			icon: <Iconify icon="fa-solid:user" size={18} />,
 			label: "Full Name",
-			val: username,
+			val: nickName,
 		},
 		{
 			icon: <Iconify icon="eos-icons:role-binding" size={18} />,
@@ -50,7 +50,7 @@ export default function ProfileTab() {
 		{
 			icon: <Iconify icon="ic:baseline-email" size={18} />,
 			label: "Email",
-			val: username,
+			val: nickName,
 		},
 	];
 

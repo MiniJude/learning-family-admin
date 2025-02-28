@@ -11,7 +11,7 @@ export default function UserDetail() {
 	const user = USERS.find((user) => user.id === id);
 	return (
 		<Card>
-			<p>这是用户{user?.username}的详情页面</p>
+			<p>这是用户{user?.nickName}的详情页面</p>
 		</Card>
 	);
 }
