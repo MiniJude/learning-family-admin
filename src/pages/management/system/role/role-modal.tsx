@@ -30,7 +30,6 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 
 	const updateRoleMutation = useMutation<Role, unknown, Role>({
 		mutationFn: (data) => {
-			Reflect.set(data, "menuIds", checkedKeys);
 			return roleService.updateRole(data);
 		},
 		onSuccess() {
@@ -40,6 +39,7 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 	});
 
 	const handleFinish = (values: any) => {
+		Reflect.set(values, "menuIds", checkedKeys);
 		if (title === t("common.createText")) {
 			createRoleMutation.mutate(values);
 		} else if (title === t("common.editText")) {
@@ -54,6 +54,11 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 		setCheckedKeys(checkedKeysValue);
 	};
 
+	/*************  ✨ Codeium Command ⭐  *************/
+	/**
+	 * Resets the form to the initial values and resets the checked tree keys to the form value's menuIds.
+	 */
+	/******  c99d7d3c-4e40-42d9-8508-c5cd8ecf2188  *******/
 	const onReset = () => {
 		form.resetFields();
 		setCheckedKeys(formValue.menuIds ?? []);
