@@ -13,6 +13,7 @@ export type RoleModalProps = {
 	show: boolean;
 	onCancel: (refresh?: boolean) => void;
 };
+
 export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) {
 	const [form] = Form.useForm();
 
@@ -38,8 +39,23 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 		},
 	});
 
+	const [checkedKeys, setCheckedKeys] = useState<number[]>(formValue.menuIds ?? []);
+	const [halfCheckedKeys, setHalfCheckedKeys] = useState<number[]>([]);
+	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+	const handleCheck = ({ checked, halfChecked }: any) => {
+		setCheckedKeys(checked);
+		setHalfCheckedKeys(halfChecked);
+	};
+
+	const handleExpand = (expandedKeys: any[]) => {
+		setExpandedKeys(expandedKeys);
+	};
+
 	const handleFinish = (values: any) => {
-		Reflect.set(values, "menuIds", checkedKeys);
+		const allCheckedKeys = [...checkedKeys, ...halfCheckedKeys];
+		const uniqueKeys = Array.from(new Set([...allCheckedKeys]));
+		Reflect.set(values, "menuIds", uniqueKeys);
 		if (title === t("common.createText")) {
 			createRoleMutation.mutate(values);
 		} else if (title === t("common.editText")) {
@@ -49,25 +65,22 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 
 	const permissions = useUserPermission();
 
-	const [checkedKeys, setCheckedKeys] = useState<number[]>(formValue.menuIds ?? []);
-	const handleCheck = (checkedKeysValue: any) => {
-		setCheckedKeys(checkedKeysValue);
-	};
-
-	/*************  ✨ Codeium Command ⭐  *************/
-	/**
-	 * Resets the form to the initial values and resets the checked tree keys to the form value's menuIds.
-	 */
-	/******  c99d7d3c-4e40-42d9-8508-c5cd8ecf2188  *******/
 	const onReset = () => {
 		form.resetFields();
 		setCheckedKeys(formValue.menuIds ?? []);
+		setHalfCheckedKeys([]);
+		setExpandedKeys([]);
 	};
 
 	useEffect(() => {
 		form.setFieldsValue({ ...formValue });
-		setCheckedKeys(formValue.menuIds ?? []);
-	}, [formValue, form]);
+		const initialCheckedKeys = formValue.menuIds ?? [];
+		setCheckedKeys(initialCheckedKeys);
+		setHalfCheckedKeys([]);
+		const uniqueKeys = Array.from(new Set([...initialCheckedKeys]));
+		// @ts-ignore
+		setExpandedKeys(uniqueKeys);
+	}, [formValue, form, formValue.menuIds]);
 
 	return (
 		<Modal forceRender title={title} open={show} onCancel={() => onCancel(true)} footer={null}>
@@ -86,7 +99,9 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 				<Form.Item<Role> label="Permission" name="menuIds">
 					<Tree
 						checkable
+						checkStrictly={true}
 						checkedKeys={checkedKeys}
+						expandedKeys={expandedKeys}
 						treeData={permissions}
 						fieldNames={{
 							key: "id",
@@ -94,6 +109,7 @@ export function RoleModal({ title, show, formValue, onCancel }: RoleModalProps) 
 							title: "name",
 						}}
 						onCheck={handleCheck}
+						onExpand={handleExpand}
 					/>
 				</Form.Item>
 

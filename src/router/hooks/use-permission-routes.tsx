@@ -86,7 +86,6 @@ const createBaseRoute = (permission: Permission, completeRoute: string): AppRout
 
 const createCatalogueRoute = (permission: Permission, flattenedPermissions: Permission[]): AppRouteObject => {
 	const baseRoute = createBaseRoute(permission, buildCompleteRoute(permission, flattenedPermissions));
-
 	if (baseRoute.meta) {
 		baseRoute.meta.hideTab = true;
 	}
@@ -150,7 +149,6 @@ export function usePermissionRoutes() {
 	const permissions = useUserPermission();
 	return useMemo(() => {
 		if (!permissions) return [];
-
 		const flattenedPermissions = flattenTrees(permissions);
 		return transformPermissionsToRoutes(permissions, flattenedPermissions);
 	}, [permissions]);
