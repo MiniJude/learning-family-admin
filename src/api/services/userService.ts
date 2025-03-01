@@ -2,31 +2,21 @@ import apiClient from "../apiClient";
 
 import type { UserInfo } from "#/entity";
 
-export interface SignInReq {
-	email: string;
-	password: string;
-}
-
-export interface SignUpReq extends SignInReq {
-	email: string;
-}
-
 export enum UserApi {
 	List = "/user/list",
 	Remove = "/user/delete",
-	Logout = "/user/logout",
-	Refresh = "/user/refresh",
-	User = "/user",
+	Create = "/user/create",
+	Update = "/user/update",
 }
 
 const getUserList = () => apiClient.get<UserInfo[]>({ url: UserApi.List });
 const removeUser = (id: string) => apiClient.delete({ url: `${UserApi.Remove}/${id}` });
-const logout = () => apiClient.get({ url: UserApi.Logout });
-const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` });
+const createUser = (data: Partial<UserInfo>) => apiClient.post({ url: UserApi.Create, data });
+const updateUser = (id: string, data: Partial<UserInfo>) => apiClient.patch({ url: `${UserApi.Update}/${id}`, data });
 
 export default {
 	getUserList,
 	removeUser,
-	findById,
-	logout,
+	createUser,
+	updateUser,
 };

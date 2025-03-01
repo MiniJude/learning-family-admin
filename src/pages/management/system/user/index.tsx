@@ -4,8 +4,19 @@ import { usePathname, useRouter } from "@/router/hooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Popconfirm, Tag, message } from "antd";
 import Table, { type ColumnsType } from "antd/es/table";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { UserInfo } from "#/entity";
 import { BasicStatus } from "#/enum";
+import { UserModal, type UserModalProps } from "./user-modal";
+
+const DEFAULT_USER_VALUE: UserInfo = {
+	id: "",
+	email: "",
+	nickName: "",
+	avatar: "",
+	status: BasicStatus.ENABLE,
+};
 
 export default function RolePage() {
 	const { push } = useRouter();
@@ -20,15 +31,25 @@ export default function RolePage() {
 	const deleteUserMutation = useMutation({
 		mutationFn: (userId: string) => userService.removeUser(userId),
 		onSuccess: () => {
-			message.success("用户删除成功");
-
-			// Invalidate the query to refetch the user list from the server
-			// This ensures the UI is updated with the latest data after deletion
-			// Unlike refetch, which manually triggers a refetch, invalidateQueries marks the query as stale and refetches it automatically
+			message.success(t("sys.api.operationSuccess"));
 			queryClient.invalidateQueries({ queryKey: ["users"] });
 		},
 		onError: () => {
-			message.error("删除用户失败");
+			message.success(t("sys.api.operationFailed"));
+		},
+	});
+
+	const { t } = useTranslation();
+
+	const [userModalProps, setUserModalProps] = useState<UserModalProps>({
+		formValue: { ...DEFAULT_USER_VALUE },
+		title: "",
+		show: false,
+		onCancel: (refresh = false) => {
+			setUserModalProps((prev) => ({ ...prev, show: false }));
+			if (refresh) {
+				queryClient.invalidateQueries({ queryKey: ["users"] });
+			}
 		},
 	});
 
@@ -48,6 +69,17 @@ export default function RolePage() {
 					</div>
 				);
 			},
+		},
+		{
+			title: "Roles",
+			dataIndex: "roles",
+			width: 200,
+			render: (roles) =>
+				roles.map((role: any) => (
+					<Tag key={role.id} color="#87d068">
+						{role.name}
+					</Tag>
+				)),
 		},
 		{
 			title: "Status",
@@ -74,7 +106,16 @@ export default function RolePage() {
 					>
 						<Iconify icon="mdi:card-account-details" size={18} />
 					</IconButton>
-					<IconButton onClick={() => {}}>
+					<IconButton
+						onClick={() => {
+							setUserModalProps((prev) => ({
+								...prev,
+								show: true,
+								title: t("common.editText"),
+								formValue: record,
+							}));
+						}}
+					>
 						<Iconify icon="solar:pen-bold-duotone" size={18} />
 					</IconButton>
 					<Popconfirm
@@ -93,11 +134,20 @@ export default function RolePage() {
 		},
 	];
 
+	const onCreate = () => {
+		setUserModalProps((prev) => ({
+			...prev,
+			show: true,
+			title: t("common.createText"),
+			formValue: { ...DEFAULT_USER_VALUE },
+		}));
+	};
+
 	return (
 		<Card
 			title="User List"
 			extra={
-				<Button type="primary" onClick={() => {}}>
+				<Button type="primary" onClick={onCreate}>
 					New
 				</Button>
 			}
@@ -111,6 +161,7 @@ export default function RolePage() {
 				dataSource={users}
 				loading={isLoading}
 			/>
+			<UserModal {...userModalProps} />
 		</Card>
 	);
 }
