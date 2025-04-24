@@ -16,7 +16,7 @@ export default function BannerCard() {
 					<h4>Welcome back 👋 </h4>
 					<h4>{nickName}</h4>
 				</div>
-				<div
+				{/* <div
 					style={{ color: themeVars.colors.palette.primary.dark }}
 					className="mx-auto mb-6 mt-4 max-w-sm text-sm opacity-80 md:mx-0"
 				>
@@ -41,7 +41,7 @@ export default function BannerCard() {
 				>
 					<Iconify icon="carbon:logo-discord" size={24} />
 					<span className="ml-2 font-black">Join Discord</span>
-				</button>
+				</button> */}
 			</Col>
 
 			<Col
