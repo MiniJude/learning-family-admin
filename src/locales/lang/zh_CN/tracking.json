@@ -1,0 +1,36 @@
+{
+	"tracking": {
+		"menu": {
+			"title": "埋点统计",
+			"desc": "用户行为埋点统计分析"
+		},
+		"title": "埋点统计",
+		"fields": {
+			"id": "ID",
+			"userId": "用户ID",
+			"eventType": "事件类型",
+			"eventName": "事件名称",
+			"eventData": "事件数据",
+			"userAgent": "用户代理",
+			"ip": "IP地址",
+			"deviceType": "设备类型",
+			"platform": "平台",
+			"timestamp": "时间戳",
+			"appVersion": "应用版本",
+			"pageUrl": "页面URL",
+			"sessionId": "会话ID",
+			"timeRange": "时间范围"
+		},
+		"placeholders": {
+			"userId": "请输入用户ID",
+			"eventType": "请选择事件类型",
+			"eventName": "请输入事件名称"
+		},
+		"eventTypes": {
+			"click": "点击",
+			"view": "浏览",
+			"load": "加载",
+			"submit": "提交"
+		}
+	}
+}

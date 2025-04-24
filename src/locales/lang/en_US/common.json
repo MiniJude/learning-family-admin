@@ -20,5 +20,13 @@
 
 		"light": "Light",
 		"dark": "Dark"
+	},
+	"search": "Search",
+	"reset": "Reset",
+	"pagination": {
+		"total": "Total {{total}} items",
+		"totalItems": "Total ({{total}}) items",
+		"page": "page",
+		"perPage": "items/page"
 	}
 }

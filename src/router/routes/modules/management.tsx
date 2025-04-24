@@ -9,14 +9,11 @@ import type { AppRouteObject } from "#/router";
 const ProfilePage = lazy(() => import("@/pages/management/user/profile"));
 const AccountPage = lazy(() => import("@/pages/management/user/account"));
 
-const OrganizationPage = lazy(
-	() => import("@/pages/management/system/organization"),
-);
-const PermissioPage = lazy(
-	() => import("@/pages/management/system/permission"),
-);
+const OrganizationPage = lazy(() => import("@/pages/management/system/organization"));
+const PermissioPage = lazy(() => import("@/pages/management/system/permission"));
 
 const Blog = lazy(() => import("@/pages/management/blog"));
+const TrackingEvents = lazy(() => import("@/pages/management/tracking"));
 
 const management: AppRouteObject = {
 	order: 2,
@@ -28,9 +25,7 @@ const management: AppRouteObject = {
 	),
 	meta: {
 		label: "sys.menu.management",
-		icon: (
-			<SvgIcon icon="ic-management" className="ant-menu-item-icon" size="24" />
-		),
+		icon: <SvgIcon icon="ic-management" className="ant-menu-item-icon" size="24" />,
 		key: "/management",
 	},
 	children: [
@@ -90,6 +85,14 @@ const management: AppRouteObject = {
 			path: "blog",
 			element: <Blog />,
 			meta: { label: "sys.menu.blog", key: "/management/blog" },
+		},
+		{
+			path: "tracking",
+			element: <TrackingEvents />,
+			meta: {
+				label: "tracking.menu.title",
+				key: "/management/tracking",
+			},
 		},
 	],
 };

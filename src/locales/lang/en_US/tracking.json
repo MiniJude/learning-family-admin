@@ -1,0 +1,36 @@
+{
+	"tracking": {
+		"menu": {
+			"title": "Tracking Statistics",
+			"desc": "User behavior tracking analysis"
+		},
+		"title": "Tracking Statistics",
+		"fields": {
+			"id": "ID",
+			"userId": "User ID",
+			"eventType": "Event Type",
+			"eventName": "Event Name",
+			"eventData": "Event Data",
+			"userAgent": "User Agent",
+			"ip": "IP Address",
+			"deviceType": "Device Type",
+			"platform": "Platform",
+			"timestamp": "Timestamp",
+			"appVersion": "App Version",
+			"pageUrl": "Page URL",
+			"sessionId": "Session ID",
+			"timeRange": "Time Range"
+		},
+		"placeholders": {
+			"userId": "Enter user ID",
+			"eventType": "Select event type",
+			"eventName": "Enter event name"
+		},
+		"eventTypes": {
+			"click": "Click",
+			"view": "View",
+			"load": "Load",
+			"submit": "Submit"
+		}
+	}
+}
