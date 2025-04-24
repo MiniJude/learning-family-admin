@@ -1,4 +1,4 @@
-import DashboardLayout from "@/layouts/dashboard";
+import NormalLayout from "@/layouts/normal";
 import PageError from "@/pages/sys/error/PageError";
 import Login from "@/pages/sys/login/Login";
 import ProtectedRoute from "@/router/components/protected-route";
@@ -32,7 +32,7 @@ export default function Router() {
 		path: "/",
 		element: (
 			<ProtectedRoute>
-				<DashboardLayout />
+				<NormalLayout />
 			</ProtectedRoute>
 		),
 		children: [{ index: true, element: <Navigate to={HOMEPAGE} replace /> }, ...permissionRoutes],

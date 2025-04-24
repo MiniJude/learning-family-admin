@@ -13,7 +13,7 @@ import { down, useMediaQuery } from "@/hooks";
 import { ThemeLayout } from "#/enum";
 import { NAV_COLLAPSED_WIDTH, NAV_WIDTH } from "./config";
 
-function DashboardLayout() {
+function NormalLayout() {
 	const { themeLayout } = useSettings();
 
 	const mobileOrTablet = useMediaQuery(down("md"));
@@ -47,4 +47,4 @@ function DashboardLayout() {
 		</Layout>
 	);
 }
-export default DashboardLayout;
+export default NormalLayout;

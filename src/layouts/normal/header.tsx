@@ -1,14 +1,13 @@
 import { Drawer } from "antd";
 import { type CSSProperties, useState } from "react";
 
-import { IconButton, Iconify, SvgIcon } from "@/components/icon";
+import { IconButton, SvgIcon } from "@/components/icon";
 import LocalePicker from "@/components/locale-picker";
 import Logo from "@/components/logo";
 import { useSettings } from "@/store/settingStore";
 
 import AccountDropdown from "../components/account-dropdown";
 import BreadCrumb from "../components/bread-crumb";
-import NoticeButton from "../components/notice";
 import SearchBar from "../components/search-bar";
 import SettingButton from "../components/setting-button";
 
@@ -59,13 +58,6 @@ export default function Header() {
 					<div className="flex">
 						<SearchBar />
 						<LocalePicker />
-						<IconButton onClick={() => window.open("https://github.com/d3george/slash-admin")}>
-							<Iconify icon="mdi:github" size={24} />
-						</IconButton>
-						<IconButton onClick={() => window.open("https://discord.gg/fXemAXVNDa")}>
-							<Iconify icon="carbon:logo-discord" size={24} />
-						</IconButton>
-						<NoticeButton />
 						<SettingButton />
 						<AccountDropdown />
 					</div>
