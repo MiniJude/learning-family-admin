@@ -104,8 +104,5 @@
 	"packageManager": "pnpm@9.1.0",
 	"msw": {
 		"workerDirectory": "public"
-	},
-	"commitlint": {
-		"extends": ["@commitlint/config-conventional"]
 	}
 }

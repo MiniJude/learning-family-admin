@@ -39,26 +39,6 @@ function LoginForm() {
 				}}
 				onFinish={handleFinish}
 			>
-				<div className="mb-4 flex flex-col">
-					<Alert
-						description={
-							<div className="flex flex-col">
-								<div className="flex">
-									<span className="flex-shrink-0 text-text-disabled">{t("sys.login.userName")}:</span>
-									<span className="ml-1 text-text-secondary">
-										{DEFAULT_USER.email} / {TEST_USER.email}
-									</span>
-								</div>
-								<div className="flex">
-									<span className="flex-shrink-0 text-text-disabled">{t("sys.login.password")}:</span>
-									<span className="ml-1 text-text-secondary">{DEFAULT_USER.password}</span>
-								</div>
-							</div>
-						}
-						showIcon
-					/>
-				</div>
-
 				<Form.Item name="email" rules={[{ required: true, message: t("sys.login.accountPlaceholder") }]}>
 					<Input placeholder={t("sys.login.userName")} />
 				</Form.Item>
@@ -72,7 +52,7 @@ function LoginForm() {
 								<Checkbox>{t("sys.login.rememberMe")}</Checkbox>
 							</Form.Item>
 						</Col>
-						<Col span={12} className="text-right">
+						{/* <Col span={12} className="text-right">
 							<Button
 								type="link"
 								className="!underline"
@@ -81,7 +61,7 @@ function LoginForm() {
 							>
 								{t("sys.login.forgetPassword")}
 							</Button>
-						</Col>
+						</Col> */}
 					</Row>
 				</Form.Item>
 				<Form.Item>
@@ -90,7 +70,7 @@ function LoginForm() {
 					</Button>
 				</Form.Item>
 
-				<Row align="middle" gutter={8}>
+				{/* <Row align="middle" gutter={8}>
 					<Col span={9} flex="1">
 						<Button className="w-full !text-sm" onClick={() => setLoginState(LoginStateEnum.MOBILE)}>
 							{t("sys.login.mobileSignInFormTitle")}
@@ -112,7 +92,7 @@ function LoginForm() {
 					<AiFillGithub />
 					<AiFillWechat />
 					<AiFillGoogleCircle />
-				</div>
+				</div> */}
 			</Form>
 		</>
 	);

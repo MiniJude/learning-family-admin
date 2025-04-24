@@ -16,7 +16,7 @@ export default function NavLogo({ collapsed, onToggle }: Props) {
 		<div style={{ height: `${HEADER_HEIGHT}px` }} className="relative flex items-center justify-center py-4">
 			<div className="flex items-center">
 				<Logo />
-				{themeLayout !== ThemeLayout.Mini && <span className="ml-2 text-xl font-bold text-primary">Slash Admin</span>}
+				{themeLayout !== ThemeLayout.Mini && <span className="ml-2 text-xl font-bold text-primary">Jude Admin</span>}
 			</div>
 			<div
 				onClick={onToggle}

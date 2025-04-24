@@ -20,7 +20,7 @@ export default function BannerCard() {
 					style={{ color: themeVars.colors.palette.primary.dark }}
 					className="mx-auto mb-6 mt-4 max-w-sm text-sm opacity-80 md:mx-0"
 				>
-					Welcome to join the Discord channel to discuss everything about Slash Admin, or you can visite my blog:
+					Welcome to join the Discord channel to discuss everything about Jude Admin, or you can visite my blog:
 					<div>
 						<a
 							href="https://blog.slashspaces.com"
